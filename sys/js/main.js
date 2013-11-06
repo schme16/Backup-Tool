@@ -340,7 +340,7 @@ function Master($scope, $timeout){
 								var t;
 								eval('t = '+fs.readFileSync('package/'+newVersion+'/package.json').toString());
 								console.log(t);
-								
+								t.icon = 'package/'+newVersion+'/sys/img/icons/refresh.png';
 								t.main = 'app://backup/package/'+newVersion+'/sys/index.html';
 								fs.writeFileSync('package.json', JSON.stringify(t));
 								fs.unlink('temp.zip', function(){});
