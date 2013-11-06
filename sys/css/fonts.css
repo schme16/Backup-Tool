@@ -1,0 +1,22 @@
+@font-face {
+	font-family: 'JosefinSlab';
+	font-style: normal;
+	font-weight: 400;
+	src: url('../fonts/josefinSlab.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'DenseRegular';
+    src: url('../fonts/dense-regular.eot');
+    src: url('../fonts/dense-regular.eot') format('embedded-opentype'),
+         url('../fonts/dense-regular.woff') format('woff'),
+         url('../fonts/dense-regular.ttf') format('truetype'),
+         url('../fonts/dense-regular.svg#DenseRegular') format('svg');
+}
+
+
+
+
+
+
+

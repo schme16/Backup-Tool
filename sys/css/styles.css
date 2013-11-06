@@ -1,0 +1,101 @@
+
+html,body{
+	background-color:#fafafa;
+	margin:2px;
+	font-family: 'Arial Narrow', Verdana, sans-serif;
+	margin-top: 7px;
+	-webkit-user-select: none;
+	font-size: 16px;
+	overflow:hidden;
+	font-weight:100;
+	border-radius: 10px;
+}
+html{
+	background:transparent !important;
+}
+
+header,footer{
+	height:50px;
+	position: fixed;
+	left:0;
+	right:0;
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#efe256), color-stop(100%,#feb645)); /* Chrome,Safari4+ */
+	line-height:50px;
+	/*font-size:40px;
+	text-align:center;
+	font-weight:bold;*/
+}
+
+header{
+	top:0;
+}
+
+.running{
+	position: absolute;
+	top: 0px;
+	left: -3px;
+	right: -3px;
+	height: 5px;
+	overflow: hidden;
+}
+
+.refershIcon{
+	position: absolute;
+	top: 14px;
+	right: 9px;
+	background-image: url('../img/icons/refresh.svg');
+	background-repeat: no-repeat;
+	background-size: contain;
+	background-position: center center;
+	width: 20px;
+	height: 20px;
+	z-index: 999999;
+
+	cursor: pointer;
+}
+
+.refershIcon:not(.animate){
+	-webkit-transition-property: all; 
+	-webkit-transition-duration: 100ms; 
+	-webkit-transition-timing-function: ease;	
+	-webkit-transform: rotate(0deg) !important;
+}
+
+.refershIcon:not(.faded):hover{
+	-webkit-transform: rotate(45deg) !important;
+}
+
+.faded{
+	opacity:0.2;
+	cursor: default;
+}
+
+.devOptions{
+	position: absolute;
+	bottom: 5px;
+	right: 5px;
+	background-image: url('../img/icons/options.svg');
+	background-repeat: no-repeat;
+	background-size: contain;
+	background-position: center center;
+	width: 15px;
+	height: 15px;
+	z-index: 999999;
+	cursor: pointer;
+}
+
+.animate{
+	-webkit-animation-name:             rotate; 
+	-webkit-animation-duration:         1s; 
+	-webkit-animation-iteration-count:  infinite;
+	-webkit-animation-timing-function: linear;
+}
+
+@-webkit-keyframes rotate {
+	from {
+		-webkit-transform: rotate(0deg);
+	}
+	to { 
+		-webkit-transform: rotate(360deg);
+	}
+}

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html ng-app="Photography Backup">
+
+	<head>
+		<title>Photography Backup Tool</title>
+		
+		<script src="js/git.js"></script>
+		<script src="js/jsCommons.js"></script>
+		<script src="js/jquery.min.js"></script>
+		<script src="js/angular.min.js"></script>
+		<script src="js/ui-bootstrap-0.6.0.min.js"></script>
+		<script src="js/main.js"></script>
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<link href="css/fonts.css" rel="stylesheet">
+		<link href="css/styles.css" rel="stylesheet">
+		
+
+	</head>
+
+	<body ng-controller="Master">
+		
+
+	
+
+	
+		<div class="running">
+			<progress percent="((currentFile/maxFiles)*100)||0" class="progress-warning progress-striped active" style="height: 10px;" animate="true"></progress>
+		</div>
+		<span class="refershIcon" ng-click="refresh()" ng-class="{'animate':running, 'faded':(!drives.serial[config.to]||!drives.serial[config.from])}"></span>
+
+		<div>
+			<div>Source:</div>
+			<span>
+				<select ng-model="config.from" >
+					<option ng-repeat="d in drives.array| orderBy: 'letter'| filter: {'letter': '!'+drives.serial[config.to].letter}" ng-selected="($parent.drives.serial[$parent.config.from].letter == d.letter)"  value="{{d.serial}}">({{d.letter}}:) - {{d.name|| 'No Name'}}</option>
+				</select>
+			</span>
+		</div>
+			
+			
+		<div>
+			<div>Destination:</div>
+			<span>
+				<select ng-model="config.to">
+					<option ng-repeat="d in (drives.array| orderBy: 'letter'| filter: {'letter': '!'+drives.serial[config.from].letter})" ng-selected="($parent.drives.serial[$parent.config.to].letter == d.letter)" value="{{d.serial}}">({{d.letter}}:) - {{d.name|| 'No Name'}}</option>
+				</select>
+			</span>
+		</div>
+		
+		<div>
+			<span>Time:</span>
+			<span style="padding-left:2px;">
+				<input type="number" max="23" min="0" style="width:33px;" ng-model="config.hour" ><span style="font-weight: bold; font-size: 17px;">:</span><input ng-model="config.minute" type="number" max="59" min="0" style="width:33px;">
+			</span>
+		</div>
+		<br>
+		<br>
+		<div align="center">
+			<label for="enabled" class="btn btn-sml">
+				<span ng-show="!config.active">Enable</span>
+				<span ng-show="config.active">Disable</span>
+			</label>
+			<input style="display:none;" type="checkbox" ng-model="config.active" name="enabled" id="enabled">
+		</div>
+			
+			
+
+
+
+
+		<div style="position: absolute; bottom: 10px;">
+			Last Ran: <span ng-show="last">{{('0' + last.hour).slice(-2)}}:{{('0' + last.minute).slice(-2)}} - {{last.date}}</span> <span ng-show="!last">N/A</span>		
+		</div>
+		
+		<span class="devOptions" ng-click="toggleDevTools()"></span>
+
+	</body>
+	
+</html>
+
+
+
+
+
+
+
+
+
+
