@@ -332,7 +332,7 @@ function Master($scope, $timeout){
 					fs.unlink('temp.zip', function(){
 						var t = res.pipe(fs.createWriteStream('temp.zip'));
 						t.on('close', function(){
-							//storage('version', newVersion);
+							storage('version', newVersion);
 							var k = fs.createReadStream('temp.zip').pipe(unzip.Extract({ path: 'package/'+'temp' }));
 							k.on('close', function(){
 								fs.renameSync('package/temp/Backup-Tool-master', 'package/'+newVersion);
@@ -358,7 +358,7 @@ function Master($scope, $timeout){
 
 
 
-process.on('uncaughtException 1', function(err) {
+process.on('uncaughtException', function(err) {
 	console.log(err);
 	m.cancelCopy();
 });	
