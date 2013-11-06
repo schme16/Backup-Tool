@@ -1,6 +1,6 @@
-
+var unzip = require('unzip');
 var exec = require('child_process').exec;
-var walker    = require('walk');
+var walker = require('walk');
 var gui = require('nw.gui');
 var path = require('path');
 var win = gui.Window.get();
@@ -111,7 +111,7 @@ function Master($scope, $timeout){
 		
 		//report errors
 		.on('nodeError', function(err){
-			console.log(stat);
+			console.log(err);
 		})
 			
 		//done!
@@ -181,13 +181,14 @@ function Master($scope, $timeout){
 
 	m.copy = function(from, to, callback){
 		m.safeApply();
-		console.log(2, from , to);
 		m.getAllFiles(from+':', function(files){
 			m.maxFiles = files.length;
 			m.currentFile = m.maxFiles- files.length;
 			var handle = function(){
-				var file = path.resolve(files.shift());
+				var file = files.shift();
 				if(file && m.running){
+					file = path.resolve(file);
+
 					var newFile = path.resolve(to+file.substr(1));
 					fsExtra.mkdirs(newFile, function(err){
 						if(err)console.log(err);
@@ -243,7 +244,7 @@ function Master($scope, $timeout){
 				date:m.dayNames[nd.getDay()]+', '+nd.getDate()+'/'+nd.getMonth()
 			};
 			
-			if(m.config.active && !m.running && m.time.hour === m.config.hour && m.time.minute === m.config.minute && m.drives.serial[m.config.to] && m.drives.serial[m.config.from] && (m.last.minute !== m.time.minute || m.last.hour !== m.time.hour || m.last.date !== m.time.date)){
+			if(m.config.active && !m.running && m.time.hour === m.config.hour && m.time.minute === m.config.minute && m.drives.serial[m.config.to] && m.drives.serial[m.config.from] && (!m.last || m.last.minute !== m.time.minute || m.last.hour !== m.time.hour || m.last.date !== m.time.date)){
 				m.run();
 			}
 		},100);
@@ -254,6 +255,14 @@ function Master($scope, $timeout){
 		m.running = false;
 		m.maxFiles = false;
 		m.currentFile = false;
+		
+		var nd = (new Date());
+		m.last = {
+			hour: nd.getHours(),
+			minute:nd.getMinutes(),
+			date:m.dayNames[nd.getDay()]+', '+nd.getDate()+'/'+nd.getMonth()
+		};
+		
 		if(write){
 			write.close();
 			write = undefined;
@@ -277,7 +286,6 @@ function Master($scope, $timeout){
 				m.config.to = a.letter[to.letter].serial;
 				m.safeApply();
 				m.copy( from.letter , to.letter, function(){
-				console.log(1, from.letter , to.letter);
 					m.running = false;
 					var nd =(new Date());
 					m.last = {
@@ -309,11 +317,48 @@ function Master($scope, $timeout){
 		}
 	};
 
+	m.checkUpdate = function(){
+		$.get('https://github.com/schme16/Backup-Tool', function(data){
+			var newVersion = $(data).find('.js-zeroclipboard.zeroclipboard-link').data('clipboard-text');
+			if (storage('version') != newVersion) {
+				var https = require('https');
+
+				https.get({
+					host: 'codeload.github.com',
+					port: 443,
+					path: '/schme16/Backup-Tool/zip/master'
+				},
+				function(res){
+					fs.unlink('temp.zip', function(){
+						var t = res.pipe(fs.createWriteStream('temp.zip'));
+						t.on('close', function(){
+							//storage('version', newVersion);
+							var k = fs.createReadStream('temp.zip').pipe(unzip.Extract({ path: 'package/'+'temp' }));
+							k.on('close', function(){
+								fs.renameSync('package/temp/Backup-Tool-master', 'package/'+newVersion);
+								
+								var t;
+								eval('t = '+fs.readFileSync('package/'+newVersion+'/package.json').toString());
+								console.log(t);
+								
+								t.main = 'app://backup/package/'+newVersion+'/sys/index.html';
+								fs.writeFileSync('package.json', JSON.stringify(t));
+								fs.unlink('temp.zip', function(){});
+								console.log('Done!');
+								
+							});
+						});
+					});
+				});
+			}
+		}, 'text');
+	};
+	
 }
 
 
 
-process.on('uncaughtException', function(err) {
+process.on('uncaughtException 1', function(err) {
 	console.log(err);
 	m.cancelCopy();
 });	

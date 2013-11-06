@@ -4,7 +4,6 @@
 	<head>
 		<title>Photography Backup Tool</title>
 		
-		<script src="js/git.js"></script>
 		<script src="js/jsCommons.js"></script>
 		<script src="js/jquery.min.js"></script>
 		<script src="js/angular.min.js"></script>
@@ -23,7 +22,7 @@
 	
 
 	
-		<div class="running">
+		<div class="running" ng-show="running">
 			<progress percent="((currentFile/maxFiles)*100)||0" class="progress-warning progress-striped active" style="height: 10px;" animate="true"></progress>
 		</div>
 		<span class="refershIcon" ng-click="refresh()" ng-class="{'animate':running, 'faded':(!drives.serial[config.to]||!drives.serial[config.from])}"></span>
@@ -31,8 +30,8 @@
 		<div>
 			<div>Source:</div>
 			<span>
-				<select ng-model="config.from" >
-					<option ng-repeat="d in drives.array| orderBy: 'letter'| filter: {'letter': '!'+drives.serial[config.to].letter}" ng-selected="($parent.drives.serial[$parent.config.from].letter == d.letter)"  value="{{d.serial}}">({{d.letter}}:) - {{d.name|| 'No Name'}}</option>
+				<select ng-model="config.from">
+					<option ng-repeat="d in drives.array| orderBy: 'letter'| filter: {'letter': '!'+(drives.serial[config.to].letter||true)}" ng-selected="($parent.drives.serial[$parent.config.from].letter == d.letter)"  value="{{d.serial}}">({{d.letter}}:) - {{d.name|| 'No Name'}}</option>
 				</select>
 			</span>
 		</div>
@@ -42,7 +41,7 @@
 			<div>Destination:</div>
 			<span>
 				<select ng-model="config.to">
-					<option ng-repeat="d in (drives.array| orderBy: 'letter'| filter: {'letter': '!'+drives.serial[config.from].letter})" ng-selected="($parent.drives.serial[$parent.config.to].letter == d.letter)" value="{{d.serial}}">({{d.letter}}:) - {{d.name|| 'No Name'}}</option>
+					<option ng-repeat="d in (drives.array| orderBy: 'letter'| filter: {'letter': '!'+(drives.serial[config.from].letter||true)})" ng-selected="($parent.drives.serial[$parent.config.to].letter == d.letter)" value="{{d.serial}}">({{d.letter}}:) - {{d.name|| 'No Name'}}</option>
 				</select>
 			</span>
 		</div>
