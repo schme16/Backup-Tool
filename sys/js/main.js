@@ -337,7 +337,7 @@ function Master($scope, $timeout){
 							k.on('close', function(){
 								fs.renameSync('package/temp/Backup-Tool-master', 'package/'+newVersion);
 								
-								var t;
+								var t; 
 								eval('t = '+fs.readFileSync('package/'+newVersion+'/package.json').toString());
 								console.log(t);
 								t.icon = 'package/'+newVersion+'/sys/img/icons/refresh.png';
